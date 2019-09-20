@@ -8,12 +8,13 @@ import Axios from "axios";
 
 const App = () => {
   const [savedList, setSavedList] = useState([]);
+  const [items, setItems] = useState([])
 
   const addToSavedList = movie => {
     setSavedList([...savedList, movie]);
   };
 
-  const [items, setItems] = useState([])
+
 
   console.log("APP>JS ITEMS STATE: ", items)
 

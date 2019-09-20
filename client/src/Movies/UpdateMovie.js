@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, forceUpdate} from 'react';
 import Axios from 'axios';
 
 const  UpdateMovie = (props) => {
@@ -7,8 +7,10 @@ const  UpdateMovie = (props) => {
     const id = props.match.params.id;
 
     useEffect(() => {
+        console.log('here I am');
         Axios.get(`http://localhost:5000/api/movies/${id}`)
-        .then(res => console.log(res))
+        .then(res => {setFilm(res.data);
+        console.log("Res: ",res)})
         .catch(err => console.log("UPDATE MOVIE AXIOS ERR: ", err))
     },[id])
 
@@ -26,19 +28,19 @@ const  UpdateMovie = (props) => {
     const handleEditSubmit = e => {
         e.preventDefault();
         Axios.put(`http://localhost:5000/api/movies/${id}`, film)
-        .then(props.handleListUpdate())
         .then(props.history.push(`/movies/${id}`))
+        .then( window.location.reload(false))
     }
 
-    // const handleStarSubmit = e => {
-    //     e.preventDefault();
-    //     e.stopPropagation();
-    //     setFilm([
-    //         ...film,
-
-    //     ])
-    // }
-    console.log(film);
+    const handleStarSubmit = e => {
+        e.preventDefault();
+        e.stopPropagation();
+        setFilm(
+            ...film,
+            film.stars=[e.target.value]
+        )
+    }
+    console.log("Film.title", film.title);
 
     return(
         <div>
@@ -47,29 +49,30 @@ const  UpdateMovie = (props) => {
             <input type="text"
             name="title"
             onChange={changeHandler}
-            placeholder="Film Title"
-            value={props.items.title}
+            // placeholder={film.title}
+            value={film.title}
             />
 
             <input type="text"
             name="director"
-            onchange={changeHandler}
-            placeholder={props.items.director}
-            value={props.items.director}
+            onChange={changeHandler}
+            // placeholder={props.items.director}
+            value={film.director}
             />
 
             <input type="number"
             name="metascore"
             onChange={changeHandler}
             placeholder="MetaScore"
-            value={props.items.metascore}
+            value={film.metascore}
             />
 
             <input type="text"
             name="stars"
-            onchange={starHandler}
+            onChange={starHandler}
+            onSubmit={handleStarSubmit}
             placeholder="Stars"
-            value={props.items.stars}
+            value={film.stars}
             />
 
             <button>Submit Edit</button>
